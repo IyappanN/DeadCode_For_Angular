@@ -8,28 +8,28 @@ namespace DeadCodeFinderForAngularTests
     public class MethodFinderTests : MethodFinderTestsBase
     {
 
-        
-        [Fact]
-        [Trait("Requirement", "Get dead code config")]
-        public void GetDeadCodeConfig_Success()
-        {
-           GetConfiguration();
-           MethodFinder.GetExecutingDirectoryName();
-           MethodFinder.GetDeadCodeConfig();
-           Assert.True(true);
-        }
 
-  
+        // [Fact]
+        // [Trait("Requirement", "Get dead code config")]
+        // public void GetDeadCodeConfig_Success()
+        // {
+        //     GetConfiguration();
+        //     MethodFinder.GetExecutingDirectoryName();
+        //     MethodFinder.GetDeadCodeConfig();
+        //     Assert.True(true);
+        // }
+
+
         [Fact]
         [Trait("Requirement", "Get component List")]
         public void componentMethodList_ArgumentNullException()
         {
-           GetConfiguration();
-           MethodFinder.projectPath = "";
-           Assert.Throws<ArgumentException>(() => MethodFinder.componentMethodList());
+            GetConfiguration();
+            MethodFinder.projectPath = "";
+            Assert.Throws<ArgumentException>(() => MethodFinder.componentMethodList());
         }
 
-        
+
 
         [Fact]
         [Trait("Requirement", "Get method list")]
@@ -46,7 +46,7 @@ namespace DeadCodeFinderForAngularTests
         {
             GetConfiguration();
             MethodFinder.GetExecutingDirectoryName();
-           
+
             Assert.True(true);
 
         }
