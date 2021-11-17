@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace DeadCodeFinder
+namespace DeadCodeFinderForAngular
 {
     class Program
     {
@@ -29,4 +29,3 @@ namespace DeadCodeFinder
     }
 
 }
-    

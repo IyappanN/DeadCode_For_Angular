@@ -7,9 +7,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-namespace DeadCodeFinder
+namespace DeadCodeFinderForAngular
 {
-    class MethodFinder
+    public class MethodFinder
     {
         public int unusedMethods = 0;
         public int unusedClasses = 0;
@@ -52,7 +52,7 @@ namespace DeadCodeFinder
                 }
             }
         }
-        private Dictionary<string, int> getMethodList(string filePath)
+        public Dictionary<string, int> getMethodList(string filePath)
         {
             Dictionary<string, int> methodList = new Dictionary<string, int>();
             Dictionary<string, int> tempMethodList = new Dictionary<string, int>();
@@ -295,7 +295,7 @@ namespace DeadCodeFinder
             }
             this.sw.WriteLine("Total Unused classes found in scan: {0}", this.unusedClasses);
         }
-        private List<string> findReferenceClasses(string filePath)
+        public List<string> findReferenceClasses(string filePath)
         {
             string[] textLine = File.ReadAllLines(filePath);
             string serviceName;
@@ -344,7 +344,7 @@ namespace DeadCodeFinder
             }
             return referenceList;
         }
-        private List<string> getServiceMethodList(string filePath)
+        public List<string> getServiceMethodList(string filePath)
         {
             string[] textLine = File.ReadAllLines(filePath);
             List<string> listOfMethods = new List<string>();
@@ -355,7 +355,7 @@ namespace DeadCodeFinder
                 Regex _regex2 = new Regex(@"$*[a-z0-9]\(*\)\:");
                 if ((_regex2.IsMatch(lines) || _regex1.IsMatch(lines)) && !lines.Contains("if ") && !lines.Contains("else ") && !lines.Contains("//") && lines.Contains("(") && !lines.Contains("constructor(") && !lines.Contains("emit(") && !lines.Contains("for") && !lines.Contains("switch") && !lines.Contains("function") && !lines.Contains("while") && !lines.Contains("get ") && !lines.Contains("set") && !lines.Contains("catch"))
                 {
-                    string[] methodNameline = lines.Split('(')[0].TrimStart().TrimEnd().Replace("public ", "").Replace("private ", "").Replace("async ", "").Split(' ');
+                    string[] methodNameline = lines.Split('(')[0].TrimStart().TrimEnd().Replace("public ", "").Replace("public ", "").Replace("async ", "").Split(' ');
                     string methodName = "";
                     if (methodNameline.Length > 1)
                     {
@@ -374,7 +374,7 @@ namespace DeadCodeFinder
             }
             return listOfMethods;
         }
-        private string extractClassName(string filePath)
+        public string extractClassName(string filePath)
         {
             string[] fileLines = File.ReadAllLines(filePath);
             string className = "";
@@ -390,9 +390,9 @@ namespace DeadCodeFinder
             }
             return className;
         }
-        private string extractReferenceVariable(string line, string serviceName)
+        public string extractReferenceVariable(string line, string serviceName)
         {
-            Regex regex1 = new Regex(@"private *:\s" + serviceName);
+            Regex regex1 = new Regex(@"public *:\s" + serviceName);
             string referenceItem = (": " + serviceName);
             string[] extractedValue = Regex.Split(line, referenceItem)[0].Split(' ');
             string referenceServiceName = extractedValue[extractedValue.Length - 1];
@@ -400,12 +400,12 @@ namespace DeadCodeFinder
         }
 
 
-        private void GetExecutingDirectoryName()
+        public void GetExecutingDirectoryName()
         {
             var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
             this.outputFileLocation = new FileInfo(location.AbsolutePath).Directory.FullName;
         }
-        private void CreateFile()
+        public void CreateFile()
         {
             string fileName = this.outputFileLocation + @"/" + this.outputFileName;
             if (!File.Exists(fileName))
@@ -413,7 +413,7 @@ namespace DeadCodeFinder
                 File.Create(fileName);
             }
         }
-        private void GetFileStream()
+        public void GetFileStream()
         {
 
             if (File.Exists(this.outputFileLocation + @"/" + this.outputFileName))
