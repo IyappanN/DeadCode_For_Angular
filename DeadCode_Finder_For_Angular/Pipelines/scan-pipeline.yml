@@ -1,0 +1,81 @@
+name: fe-$(SourceBranchName)-$(Date:yyyyMMdd)$(Rev:.rr)
+
+pool:
+  name: DCD
+  demands:
+  - npm
+  - BUILDAGENT_TYPE -equals frontend
+
+trigger:
+  batch: true
+  branches:
+    include: 
+    - develop
+  paths:
+    include:
+      - Frontend/DCDx
+
+variables:
+  - name: sonar_projectKey
+    value: 'DCDx_SonarQuebe'
+  - name: sonar_projectName
+    value: 'DCDx_SonarQuebe'
+  - name: sonar_host_url
+    value: 'http://161.85.17.115:9000/'
+  - name: sonar_scanner
+    value: '/vsts/library/Sonar-Scanner-4.6.1.2450/bin/sonar-scanner'
+  - name: artifact_name
+    value: frontend
+  - group: Frontend
+
+steps:
+- task: shellexec@0
+  displayName: 'Set Npm Authentication'
+  inputs:
+    code: |
+     npm set _auth $(NpmToken)
+
+- task: Npm@0
+  displayName: 'Npm Install'
+  inputs:
+    cwd: $(Build.SourcesDirectory)/Frontend/DCDx
+    arguments: '--sass-binary-site=https://artifactory-ehv.ta.philips.com/artifactory/dcdx-stable-generic-pkgs/node-sass'
+
+- task: shellexec@0
+  displayName: 'Run SonarQuebe'
+  inputs:
+    code: |
+     $(sonar_scanner) -Dsonar.projectKey=$(sonar_projectKey) -Dsonar.projectName=$(sonar_projectName) -Dsonar.sources="$(Build.SourcesDirectory)/Frontend/DCDx/app" -Dsonar.host.url=$(sonar_host_url)
+
+- task: shellexec@0
+  displayName: 'Unit Test Scanning'
+  inputs:
+    code: |
+     cd "$(Build.SourcesDirectory)/Frontend/DCDx/" && npm run unit:test:pipeline
+
+- task: shellexec@0
+  displayName: 'SonarQuebe status Check'
+  inputs:
+    code: |
+     cd $(Build.SourcesDirectory)/Frontend/DCDx/
+     curl $(sonar_host_url)api/qualitygates/project_status?projectKey=$(sonar_projectName)|cat > status.txt
+     ProjectStatus=$(cat status.txt|grep  '"projectStatus":{"status":"OK"')
+     echo $ProjectStatus
+     VarOK="\"OK\""
+     if [ "$ProjectStatus" = "" ];
+     then
+     echo "Quality gate is not green"
+     exit 1
+     else
+       echo "Quality gate is green"  
+       exit 0
+     fi
+  timeoutInMinutes: 100
+
+- task: Npm@0
+  displayName: 'Npm Build'
+  inputs:
+    cwd: '$(Build.SourcesDirectory)/Frontend/DCDx'
+    command: 'run'
+    arguments: 'build:aot:prod'
+

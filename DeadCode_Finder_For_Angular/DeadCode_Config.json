@@ -1,0 +1,6 @@
+{
+  "Project_Path": "../../agent/_work/1/s/app",
+  "Class_Threshold": "5",
+  "Method_Threshold": "5",
+  "Files_Exlude_List": "audio-stream.component.ts,create-assessment.component.ts,rename-assessment.component.ts,create-user-information.component.ts,edit-user-information.component.ts,video.component.ts,audio-manager.service.ts,sort.service.ts,ipad-patient-handover-dialog.service.ts,user-data-sharing.service.ts,error-message.service.ts,pre-test-instructions.service.ts,management-mode-guard.service.ts,authentication-guard.service.ts,test-mode-guard.service.ts,authorization-guard.service.ts,can-deactivate-guard.service.ts,patientgroup-auth-guard.service.ts,naming-test-trial.component.ts,patient-data.service.ts,device-log.service.ts"
+}
